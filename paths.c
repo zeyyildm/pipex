@@ -6,7 +6,7 @@
 /*   By: zeyildir <zeyildir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:18:32 by zeyildir          #+#    #+#             */
-/*   Updated: 2025/11/09 17:13:10 by zeyildir         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:37:15 by zeyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,34 +29,35 @@ char	*get_paths(char **env)
 char	**get_split_paths(char *path)
 {
 	char	**tmp;
-
+	
 	tmp = ft_split(path, ':');
 	return (tmp);
-	free(tmp);
 }
 
 char	**get_commands(char *cmd)
 {
 	char	**tmp;
-
-	tmp = ft_split(cmd, ' ');
+	
+	tmp = NULL;
+	if (cmd[0] != '\0')
+		tmp = ft_split(cmd, ' ');
 	return (tmp);
-	free(tmp);
 }
 
 char	*find_real_path(char **paths, char *cmd)
 {
+
+
 	int		i;
 	char	*joined_path;
 	char	*path_with_cmd;
-	char	**tmp;
 
 	i = 0;
-	tmp = ft_split(cmd, ' ');
-	while (paths[i])
+	
+	while (cmd != NULL && paths[i])
 	{
 		joined_path = ft_strjoin(paths[i], "/");
-		path_with_cmd = ft_strjoin(joined_path, tmp[0]);
+		path_with_cmd = ft_strjoin(joined_path, cmd);
 		free(joined_path);
 		if (access(path_with_cmd, F_OK | X_OK) == 0)
 			return (path_with_cmd);
@@ -64,5 +65,5 @@ char	*find_real_path(char **paths, char *cmd)
 		i++;
 	}
 	write(2, "Error\n", 6);
-	return (0);
+	return (NULL);
 }
