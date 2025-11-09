@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   paths.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zeyildir <zeyildir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/09 16:18:32 by zeyildir          #+#    #+#             */
+/*   Updated: 2025/11/09 17:13:10 by zeyildir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 char	*get_paths(char **env)
@@ -20,6 +32,7 @@ char	**get_split_paths(char *path)
 
 	tmp = ft_split(path, ':');
 	return (tmp);
+	free(tmp);
 }
 
 char	**get_commands(char *cmd)
@@ -28,6 +41,7 @@ char	**get_commands(char *cmd)
 
 	tmp = ft_split(cmd, ' ');
 	return (tmp);
+	free(tmp);
 }
 
 char	*find_real_path(char **paths, char *cmd)
@@ -35,12 +49,14 @@ char	*find_real_path(char **paths, char *cmd)
 	int		i;
 	char	*joined_path;
 	char	*path_with_cmd;
+	char	**tmp;
 
 	i = 0;
+	tmp = ft_split(cmd, ' ');
 	while (paths[i])
 	{
 		joined_path = ft_strjoin(paths[i], "/");
-		path_with_cmd = ft_strjoin(joined_path, cmd);
+		path_with_cmd = ft_strjoin(joined_path, tmp[0]);
 		free(joined_path);
 		if (access(path_with_cmd, F_OK | X_OK) == 0)
 			return (path_with_cmd);
